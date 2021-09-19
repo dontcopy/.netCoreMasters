@@ -11,10 +11,10 @@ namespace ASPNetCoreMastersTodoList.Api.Controllers
    
     public class ErrorController : ControllerBase
     {
-       
+
 
         // GET api/<ErrorController>/5
-       
+        [Route("/error")]
         public IActionResult Get()
         {
             return this.Problem();
