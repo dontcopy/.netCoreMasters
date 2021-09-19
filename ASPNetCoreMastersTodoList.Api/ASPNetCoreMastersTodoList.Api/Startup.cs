@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASPNetCoreMastersTodoList.Api.Data;
+using ASPNetCoreMastersTodoList.Api.Profiles;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,7 +32,7 @@ namespace ASPNetCoreMastersTodoList.Api
             services.AddControllers();
             var mapperConfig = new MapperConfiguration(mc =>
             {
-                mc.AddProfile(new MappingProfile());
+                mc.AddProfile(new ItemProfile());
             });
 
             IMapper mapper = mapperConfig.CreateMapper();

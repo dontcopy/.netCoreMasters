@@ -35,7 +35,7 @@ namespace ASPNetCoreMastersTodoList.Api.Controllers
         public void Post(ItemCreateApiModel item)
         {
             var model = _mapper.Map<ItemDTO>(item);
-
+            _repository.Save(model);
         }
     }
 }
