@@ -14,8 +14,14 @@ namespace ASPNetCoreMastersTodoList.Api.Data
         }
         public IEnumerable<string> GetAll(int userId)
         {
-            throw new Exception("ghfhf");
-            return new ItemServices().GetAll(userId);
+            try
+            {
+                return new ItemServices().GetAll(userId);
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }
