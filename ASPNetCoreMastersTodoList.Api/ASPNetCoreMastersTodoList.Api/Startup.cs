@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASPNetCoreMastersTodoList.Api.Data;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,6 +29,12 @@ namespace ASPNetCoreMastersTodoList.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
             services.AddScoped<IItemRepository,ItemRepository>();
         }
 
@@ -52,7 +59,10 @@ namespace ASPNetCoreMastersTodoList.Api
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+
+                endpoints.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

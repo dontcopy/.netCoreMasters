@@ -1,4 +1,5 @@
 ﻿
+using Services.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,18 @@ namespace Services
                 result[ctr] = RandomString(random.Next(5, 10));
             }
             return result;
+        }
+
+        public bool Save(ItemDTO item)
+        {
+            //map w/o automapper
+            var itemDomain = new DomainModels.Item()
+            {
+                Text = item.Text
+            };
+          
+
+            return true;
         }
 
         private static string RandomString(int length)

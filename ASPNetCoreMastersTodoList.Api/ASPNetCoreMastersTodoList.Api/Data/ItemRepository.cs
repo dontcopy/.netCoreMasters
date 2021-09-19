@@ -1,4 +1,5 @@
 ﻿using Services;
+using Services.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,18 @@ namespace ASPNetCoreMastersTodoList.Api.Data
             {
                 throw;
             }
+        }
+
+        public void Save(ItemDTO item)
+        {
+            new ItemServices().Save(item);
+            //Not enough info
+        }
+
+        int IItemRepository.GetAll(int userId)
+        {
+            //No implementation specified
+            throw new NotImplementedException();
         }
     }
 }
