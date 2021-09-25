@@ -8,14 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ASPNetCoreMastersTodoList.Api.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
+   
     public class ErrorController : ControllerBase
     {
-       
+
 
         // GET api/<ErrorController>/5
-        [HttpGet]
         [Route("/error")]
         public IActionResult Get()
         {

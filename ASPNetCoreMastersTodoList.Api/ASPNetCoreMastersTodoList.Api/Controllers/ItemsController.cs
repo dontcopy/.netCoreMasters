@@ -2,31 +2,40 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ASPNetCoreMastersTodoList.Api.ApiModels;
 using ASPNetCoreMastersTodoList.Api.Data;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Services.DTO;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ASPNetCoreMastersTodoList.Api.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
+    
     public class ItemsController : ControllerBase
     {
         private IItemRepository _repository;
-        public ItemsController(IItemRepository repository)
+        private readonly IMapper _mapper;
+        public ItemsController(IItemRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
         
 
         // GET api/<ItemsController>/5
-        [HttpGet("{id}")]
-        public IEnumerable<string> Get(int id)
+       
+        public int Get(int id)
         {
-            return _repository.GetAll(id);
+            //changed to return type to int
+            return id;
         }
 
-        
+        public void Post(ItemCreateApiModel item)
+        {
+            var model = _mapper.Map<ItemDTO>(item);
+            _repository.Save(model);
+        }
     }
 }
