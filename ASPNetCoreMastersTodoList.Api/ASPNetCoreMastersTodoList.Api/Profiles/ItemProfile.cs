@@ -13,6 +13,8 @@ namespace ASPNetCoreMastersTodoList.Api.Profiles
         public ItemProfile()
         {
             CreateMap<ItemCreateApiModel, ItemDTO>();
+            CreateMap<ItemUpdateApiModel, ItemDTO>();
+            CreateMap<ItemDTO, ItemFetchApiModel>();
         }
     }
 }

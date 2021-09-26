@@ -8,7 +8,13 @@ namespace ASPNetCoreMastersTodoList.Api.Data
 {
     public interface IItemRepository
     {
-        public int GetAll(int userId);
-        public void Save(ItemDTO item);
+        public void Upsert(ItemDTO item);
+
+        public void Delete(int itemId);
+
+        public IEnumerable<ItemDTO> GetAllItems();
+        public IEnumerable<ItemDTO> GetAllItemsFilterBy(string filter);
+        public ItemDTO GetItem(int itemId);
+
     }
 }

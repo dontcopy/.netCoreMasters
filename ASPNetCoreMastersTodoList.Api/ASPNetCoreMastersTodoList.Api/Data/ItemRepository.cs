@@ -13,6 +13,19 @@ namespace ASPNetCoreMastersTodoList.Api.Data
         {
             //add context
         }
+
+        public void Delete(int itemId)
+        {
+            try
+            {
+                new ItemServices().Delete(itemId);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
         public IEnumerable<string> GetAll(int userId)
         {
             try
@@ -25,16 +38,25 @@ namespace ASPNetCoreMastersTodoList.Api.Data
             }
         }
 
-        public void Save(ItemDTO item)
+        public IEnumerable<ItemDTO> GetAllItems()
         {
-            new ItemServices().Save(item);
-            //Not enough info
+            return new ItemServices().GetAllItems();
         }
 
-        int IItemRepository.GetAll(int userId)
+        public IEnumerable<ItemDTO> GetAllItemsFilterBy(string filter)
         {
-            //No implementation specified
-            throw new NotImplementedException();
+            return new ItemServices().GetAllItems();
         }
+
+        public ItemDTO GetItem(int itemId)
+        {
+            return new ItemServices().GetItem(itemId);
+        }
+
+        public void Upsert(ItemDTO item)
+        {
+            new ItemServices().Upsert(item);
+        }
+
     }
 }

@@ -21,7 +21,7 @@ namespace Services
             return result;
         }
 
-        public bool Save(ItemDTO item)
+        public bool Upsert(ItemDTO item)
         {
             //map w/o automapper
             var itemDomain = new DomainModels.Item()
@@ -31,6 +31,41 @@ namespace Services
           
 
             return true;
+        }
+
+        public bool Delete(int id)
+        {
+            return true;
+        }
+
+
+        public IList<ItemDTO> GetAllItems()
+        {
+            return GenerateDummyData();
+        }
+
+        public IList<ItemDTO> GetAllItemsFilterBy(string filter)
+        {
+            return GenerateDummyData().Where(x => x.Text.Contains(filter)).ToList();
+        }
+
+        public ItemDTO GetItem(int id)
+        {
+            var Items = GenerateDummyData();
+            return Items.FirstOrDefault(x => x.ItemId == id);
+        }
+
+        private static IList<ItemDTO> GenerateDummyData()
+        {
+            var result = new List<ItemDTO>();
+            var size = random.Next(5, 100);
+            for (int i = size - 1; i >= 0; i--)
+            {
+                result.Add(new ItemDTO() { ItemId = i, Text = RandomString(random.Next(5, 10)) });
+            }
+
+            return result.OrderBy(x=>x.ItemId).ToList();
+
         }
 
         private static string RandomString(int length)
