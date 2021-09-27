@@ -30,12 +30,8 @@ namespace ASPNetCoreMastersTodoList.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            var mapperConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new ItemProfile());
-            });
-
-            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddSwaggerGen();
             services.AddScoped<IItemRepository,ItemRepository>();
         }
 
@@ -53,18 +49,20 @@ namespace ASPNetCoreMastersTodoList.Api
             }
 
             app.UseHttpsRedirection();
-
+            app.UseSwagger();
+            app.UseSwaggerUI(opt =>
+            {
+                opt.SwaggerEndpoint("/swagger/v1/swagger.json", "Assignment API");
+            });
             app.UseRouting();
 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-
-                endpoints.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
+           
         }
     }
 }

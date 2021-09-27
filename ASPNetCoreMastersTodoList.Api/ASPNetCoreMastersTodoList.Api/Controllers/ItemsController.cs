@@ -12,7 +12,8 @@ using Services.DTO;
 
 namespace ASPNetCoreMastersTodoList.Api.Controllers
 {
-    
+    [Route("api/[controller]")]
+    [ApiController]
     public class ItemsController : ControllerBase
     {
         private IItemRepository _repository;
@@ -22,20 +23,52 @@ namespace ASPNetCoreMastersTodoList.Api.Controllers
             _repository = repository;
             _mapper = mapper;
         }
-        
 
-        // GET api/<ItemsController>/5
-       
-        public int Get(int id)
+
+        [HttpGet]
+        public ActionResult<IEnumerable<ItemFetchApiModel>> GetItems()
         {
-            //changed to return type to int
-            return id;
+            var items = _repository.GetAllItems();
+            return Ok(_mapper.Map<IEnumerable<ItemFetchApiModel>>(items));
         }
 
-        public void Post(ItemCreateApiModel item)
+        [HttpGet("{itemId}")]
+        public ActionResult<ItemFetchApiModel> GetItem(int itemId)
         {
-            var model = _mapper.Map<ItemDTO>(item);
-            _repository.Save(model);
+            var item = _repository.GetItem(itemId);
+            if(item == null)
+                return NotFound();
+            return Ok(_mapper.Map<ItemFetchApiModel>(item));
+        }
+
+        [HttpGet]
+        [Route("filterBy")]
+        public ActionResult<IEnumerable<ItemFetchApiModel>> GetItems([FromQuery]Dictionary<string,string> filters)
+        {
+            var items = _repository.GetAllItems();
+            return Ok(_mapper.Map<IEnumerable<ItemFetchApiModel>>(items));
+        }
+
+        [HttpPost]
+        public ActionResult Post([FromBody] ItemCreateApiModel item)
+        {
+            _repository.Upsert(_mapper.Map<ItemDTO>(item));
+            return Ok();
+        }
+
+        [HttpPut("{itemId}")]
+        public ActionResult Put(int itemId, [FromBody] ItemUpdateApiModel item)
+        {
+            // item model already has the itemId
+            _repository.Upsert(_mapper.Map<ItemDTO>(item));
+            return Ok();
+        }
+
+        [HttpDelete("{itemId}")]
+        public ActionResult Delete(int itemid)
+        {
+            _repository.Delete(itemid);
+            return Ok();
         }
     }
 }
