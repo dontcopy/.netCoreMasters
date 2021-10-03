@@ -61,10 +61,14 @@ namespace ASPNetCoreMastersTodoList.Api.Controllers
         }
 
         [HttpPut("{itemId}")]
-        public ActionResult Put(int itemId, [FromBody] ItemUpdateApiModel item)
+        public ActionResult Put(int itemId, [FromBody] ItemUpdateApiModel itemUpdate)
         {
-            // item model already has the itemId
-            _svc.Update(_mapper.Map<ItemDTO>(item));
+            var item = _svc.Get(itemId);
+            if (item == null)
+                return NotFound();
+            var toUpdate = _mapper.Map<ItemDTO>(itemUpdate);
+            toUpdate.ItemId = item.ItemId;
+            _svc.Update(toUpdate);
             return Ok();
         }
 

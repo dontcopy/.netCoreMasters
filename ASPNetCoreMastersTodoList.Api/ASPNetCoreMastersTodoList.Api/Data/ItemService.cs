@@ -15,10 +15,10 @@ namespace ASPNetCoreMastersTodoList.Api.Data
     {
         private IItemRepository _repository;
         private readonly IMapper _mapper;
-        public ItemService(DataContext context,IItemRepository repository, IMapper mapper)
+        public ItemService(IItemRepository repository, IMapper mapper)
         {
             _repository = repository;
-            _repository.LoadContext(context);
+            _repository.LoadContext(new DataContext());
             _mapper = mapper;
         }
         public void Add(ItemDTO item)
@@ -43,9 +43,31 @@ namespace ASPNetCoreMastersTodoList.Api.Data
 
         public IEnumerable<ItemDTO> GetAllByFilter(ItemByFilterDTO filters)
         {
-            //not enough info on ItemByFilterDto
-            return _mapper.Map<IEnumerable<ItemDTO>>(_repository.All());
+            var filterItems = new List<ItemDTO>();
+            try
+            {
+                var items = _mapper.Map<IEnumerable<ItemDTO>>(_repository.All());
+                
+                //dummy filter implementation
+                foreach (var filter in filters.filters)
+                {
+                    filterItems.Add(items.FirstOrDefault(x => x.ItemId == Convert.ToInt32(filter.Key)));
+                }
+                foreach (var filter in filters.filters)
+                {
+                   var item=filterItems.FirstOrDefault(x => x.ItemId == Convert.ToInt32(filter.Key));
+                   if (item != null&&item.Text != filter.Value)
+                        filterItems.Remove(item);
+                }
+
+            }
+            catch(Exception ex)
+            { 
+                //// do something
+                throw (ex); }
+            return filterItems;
         }
+    
 
         public void Update(ItemDTO item)
         {
