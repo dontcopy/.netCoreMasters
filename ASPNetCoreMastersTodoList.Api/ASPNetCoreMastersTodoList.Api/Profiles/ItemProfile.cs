@@ -1,5 +1,6 @@
 ﻿using ASPNetCoreMastersTodoList.Api.ApiModels;
 using AutoMapper;
+using DomainModels;
 using Services.DTO;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace ASPNetCoreMastersTodoList.Api.Profiles
             CreateMap<ItemCreateApiModel, ItemDTO>();
             CreateMap<ItemUpdateApiModel, ItemDTO>();
             CreateMap<ItemDTO, ItemFetchApiModel>();
+            CreateMap<Item, ItemDTO > ().ReverseMap();
         }
     }
 }

@@ -18,8 +18,6 @@ namespace ASPNetCoreMastersTodoList.Api.ApiModels
         [StringLength(128, MinimumLength = 1)]
         [Required]
         public string Text { get; set; }
-        [Required]
-        public int ItemId { get; set; }
     }
 
     public class ItemFetchApiModel

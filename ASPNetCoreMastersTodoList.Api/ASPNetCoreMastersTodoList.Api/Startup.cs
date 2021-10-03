@@ -13,7 +13,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Repositories;
+using Repositories.Item;
 using Services;
+using Services.ItemService;
 
 namespace ASPNetCoreMastersTodoList.Api
 {
@@ -32,7 +35,11 @@ namespace ASPNetCoreMastersTodoList.Api
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSwaggerGen();
+            services.AddSingleton<DataContext>();
+
+            //services.AddScoped<IItem, ItemRepository>();
             services.AddScoped<IItemRepository,ItemRepository>();
+            services.AddScoped<IItemService,ItemService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
