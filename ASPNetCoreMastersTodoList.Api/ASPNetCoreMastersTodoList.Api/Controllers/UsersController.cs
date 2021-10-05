@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using ASPNetCoreMastersTodoList.Api.ApiModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using static ASPNetCoreMastersTodoList.Api.ApiModels.AuthModel;
 
 namespace ASPNetCoreMastersTodoList.Api.Controllers
 {
@@ -12,9 +14,10 @@ namespace ASPNetCoreMastersTodoList.Api.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        public UsersController()
+        private Authentication _auth;
+        public UsersController(IOptions<Authentication> options)
         {
-
+            _auth = options.Value;
         }
 
         [HttpPost("login")]
@@ -25,7 +28,7 @@ namespace ASPNetCoreMastersTodoList.Api.Controllers
             if (response == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
            */
-            return Ok();
+            return Ok(_auth.JWT);
         }
     }
 }

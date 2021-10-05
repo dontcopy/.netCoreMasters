@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using ASPNetCoreMastersTodoList.Api.Data;
 using ASPNetCoreMastersTodoList.Api.Profiles;
 using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -20,6 +19,7 @@ using Repositories;
 using Repositories.Item;
 using Services;
 using Services.ItemService;
+using static ASPNetCoreMastersTodoList.Api.ApiModels.AuthModel;
 
 namespace ASPNetCoreMastersTodoList.Api
 {
@@ -43,16 +43,9 @@ namespace ASPNetCoreMastersTodoList.Api
             //services.AddScoped<IItem, ItemRepository>();
             services.AddScoped<IItemRepository,ItemRepository>();
             services.AddScoped<IItemService,ItemService>();
-
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.Authority = $"https://{Configuration["Auth0:Domain"]}/";
-                options.Audience = Configuration["Auth0:Audience"];
-            });
+         
+ 
+            services.Configure<Authentication>(Configuration.GetSection("Authentication"));
 
         }
 
