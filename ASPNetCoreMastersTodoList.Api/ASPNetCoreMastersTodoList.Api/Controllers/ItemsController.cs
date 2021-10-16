@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ASPNetCoreMastersTodoList.Api.ApiModels;
 using ASPNetCoreMastersTodoList.Api.Data;
+using ASPNetCoreMastersTodoList.Api.Filters;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Services.DTO;
@@ -13,6 +14,7 @@ using Services.ItemService;
 
 namespace ASPNetCoreMastersTodoList.Api.Controllers
 {
+    [ItemExistingFilterAttribute]
     [Route("api/[controller]")]
     [ApiController]
     public class ItemsController : ControllerBase
