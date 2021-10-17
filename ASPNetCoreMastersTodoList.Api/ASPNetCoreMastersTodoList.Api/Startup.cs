@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ASPNetCoreMastersTodoList.Api.Data;
+using ASPNetCoreMastersTodoList.Api.Filters;
 using ASPNetCoreMastersTodoList.Api.Profiles;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
@@ -35,7 +36,10 @@ namespace ASPNetCoreMastersTodoList.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(opts =>
+            {
+                opts.Filters.Add<LogTimeFilter>();
+            });
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSwaggerGen();
             services.AddSingleton<DataContext>();
