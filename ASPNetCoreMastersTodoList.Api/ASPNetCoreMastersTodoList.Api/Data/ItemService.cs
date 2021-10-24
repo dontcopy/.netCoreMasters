@@ -15,10 +15,10 @@ namespace ASPNetCoreMastersTodoList.Api.Data
     {
         private IItemRepository _repository;
         private readonly IMapper _mapper;
-        public ItemService(IItemRepository repository, IMapper mapper)
+        public ItemService(IItemRepository repository, IMapper mapper,DataContext dataContext)
         {
             _repository = repository;
-            _repository.LoadContext(new DataContext());
+            _repository.LoadContext(dataContext);
             _mapper = mapper;
         }
         public void Add(ItemDTO item)

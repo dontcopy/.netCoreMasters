@@ -28,6 +28,7 @@ namespace Repositories.Item
             {
                 _context.Items.RemoveAll(x => x.ItemId == item.ItemId);
             }
+
             _context.Items.Add(item);
         }
     }
