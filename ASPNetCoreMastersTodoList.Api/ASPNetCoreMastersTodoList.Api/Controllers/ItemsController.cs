@@ -6,6 +6,7 @@ using ASPNetCoreMastersTodoList.Api.ApiModels;
 using ASPNetCoreMastersTodoList.Api.Data;
 using ASPNetCoreMastersTodoList.Api.Filters;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.DTO;
 using Services.ItemService;
@@ -14,6 +15,7 @@ using Services.ItemService;
 
 namespace ASPNetCoreMastersTodoList.Api.Controllers
 {
+    [Authorize]
     [ItemExistingFilterAttribute]
     [Route("api/[controller]")]
     [ApiController]
