@@ -7,7 +7,7 @@ namespace Repositories
     public class DataContext
     {
 
-        public DataContext()
+        public  DataContext()
         {
             Items = GenerateDummyData().ToList();
         }
@@ -21,7 +21,13 @@ namespace Repositories
             var size = random.Next(5, 100);
             for (int i = size - 1; i >= 0; i--)
             {
-                result.Add(new DomainModels.Item() { ItemId = i, Text = RandomString(random.Next(5, 10)) });
+                result.Add(new DomainModels.Item()
+                {
+                    ItemId = i,
+                    Text = RandomString(random.Next(5, 10)),
+                    CreatedBy = RandomString(random.Next(8, 10)),
+                    DateCreated = DateTime.Now
+                }) ;
             }
 
             return result.OrderBy(x => x.ItemId).ToList();

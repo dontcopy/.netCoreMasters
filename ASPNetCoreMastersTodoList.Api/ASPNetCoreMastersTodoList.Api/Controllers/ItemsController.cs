@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASPNetCoreMastersTodoList.Api.ApiModels;
+using ASPNetCoreMastersTodoList.Api.Authentication;
 using ASPNetCoreMastersTodoList.Api.Data;
 using ASPNetCoreMastersTodoList.Api.Filters;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Services.DTO;
 using Services.ItemService;
@@ -21,12 +23,16 @@ namespace ASPNetCoreMastersTodoList.Api.Controllers
     [ApiController]
     public class ItemsController : ControllerBase
     {
-        private IItemService _svc;
+        private readonly IItemService _svc;
+        private readonly UserManager<AppUser> _userManager;
         private readonly IMapper _mapper;
-        public ItemsController(IItemService svc, IMapper mapper)
+        private readonly IAuthorizationService _authService​;
+        public ItemsController(IItemService svc, IMapper mapper, UserManager<AppUser> userManager, IAuthorizationService authService)
         {
+            _userManager = userManager;
             _svc = svc;
             _mapper = mapper;
+            _authService = authService;
         }
 
 
@@ -60,16 +66,23 @@ namespace ASPNetCoreMastersTodoList.Api.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] ItemCreateApiModel item)
         {
-            _svc.Add(_mapper.Map<ItemDTO>(item));
+            var newItem = _mapper.Map<ItemDTO>(item);
+            newItem.CreatedBy = User.Identity.Name;
+            newItem.DateCreated = DateTime.Now;
+            newItem.ItemId = _svc.GetAll().Count(); //should be replace by autoseed //for demo only
+            _svc.Add(newItem);
             return Ok();
         }
 
         [HttpPut("{itemId}")]
-        public ActionResult Put(int itemId, [FromBody] ItemUpdateApiModel itemUpdate)
+        public async Task<ActionResult> PutAsync(int itemId, [FromBody] ItemUpdateApiModel itemUpdate)
         {
             var item = _svc.Get(itemId);
             if (item == null)
                 return NotFound();
+            var authResult = await _authService.AuthorizeAsync(User, item, "canEditItem");
+            if (!authResult.Succeeded)
+                return StatusCode(401);
             var toUpdate = _mapper.Map<ItemDTO>(itemUpdate);
             toUpdate.ItemId = item.ItemId;
             _svc.Update(toUpdate);

@@ -2,14 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using ASPNetCoreMastersTodoList.Api.Authentication;
 using ASPNetCoreMastersTodoList.Api.Data;
 using ASPNetCoreMastersTodoList.Api.Filters;
+using ASPNetCoreMastersTodoList.Api.Policies;
 using ASPNetCoreMastersTodoList.Api.Profiles;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -24,6 +27,7 @@ using Microsoft.IdentityModel.Tokens;
 using Repositories;
 using Repositories.Item;
 using Services;
+using Services.DTO;
 using Services.ItemService;
 
 namespace ASPNetCoreMastersTodoList.Api
@@ -53,7 +57,7 @@ namespace ASPNetCoreMastersTodoList.Api
             {
                 opts.User.RequireUniqueEmail = true;
                 opts.Password.RequiredLength = 8;
-
+                opts.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier;
                 opts.SignIn.RequireConfirmedEmail = true;
             });
             services.AddAuthentication(options =>
@@ -74,16 +78,23 @@ namespace ASPNetCoreMastersTodoList.Api
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:JWT:SecurityKey"]))
                 };
             });
-
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("canEditItem",
+                    policyBuilder =>
+                        policyBuilder.AddRequirements(
+                            new IsEditAllowedRequirement()
+                        ));
+            });
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSwaggerGen();
             services.AddSingleton<DataContext>();
-
+            services.AddScoped<IAuthorizationHandler, IsEditAllowedHandler>();
             //services.AddScoped<IItem, ItemRepository>();
             services.AddScoped<IItemRepository,ItemRepository>();
             services.AddScoped<IItemService,ItemService>();
+            
 
-      
 
         }
 
