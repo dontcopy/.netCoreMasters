@@ -26,6 +26,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Repositories;
 using Repositories.Item;
+using Serilog;
 using Services;
 using Services.DTO;
 using Services.ItemService;
@@ -89,6 +90,7 @@ namespace ASPNetCoreMastersTodoList.Api
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSwaggerGen();
             services.AddSingleton<DataContext>();
+            services.AddSingleton(Log.Logger);
             services.AddScoped<IAuthorizationHandler, IsEditAllowedHandler>();
             //services.AddScoped<IItem, ItemRepository>();
             services.AddScoped<IItemRepository,ItemRepository>();

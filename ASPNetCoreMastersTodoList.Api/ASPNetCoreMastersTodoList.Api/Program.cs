@@ -15,10 +15,14 @@ namespace ASPNetCoreMastersTodoList.Api
     {
         public static int Main(string[] args)
         {
+            var config = new ConfigurationBuilder()
+               .AddJsonFile("appsettings.json")
+               .Build();
+
             Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            .Enrich.FromLogContext()
+            .ReadFrom.Configuration(config)
             .WriteTo.Console()
+            .WriteTo.Seq("http://localhost:5341")
             .CreateLogger();
 
             try
